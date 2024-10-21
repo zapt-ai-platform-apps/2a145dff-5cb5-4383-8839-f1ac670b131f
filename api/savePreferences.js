@@ -29,14 +29,13 @@ export default async function handler(req, res) {
         delayStart: sessionPreferences.delayStart,
       })
       .onConflictDoUpdate({
-        target: [preferences.userId],
+        target: preferences.userId,
         set: {
           sessionLength: sessionPreferences.sessionLength,
           days: sessionPreferences.days,
           delayStart: sessionPreferences.delayStart,
         },
-      })
-      .returning();
+      });
 
     // Delete old exams and mappings
     await db.delete(preferencesToExams).where(eq(preferencesToExams.userId, user.id));
@@ -111,6 +110,6 @@ export default async function handler(req, res) {
     res.status(200).json({ message: 'Preferences and exams saved successfully' });
   } catch (error) {
     console.error('Error saving preferences:', error);
-    res.status(500).json({ error: 'Error saving preferences' });
+    res.status(500).json({ error: 'Error saving preferences: ' + error.message });
   }
 }
