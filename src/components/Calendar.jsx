@@ -9,10 +9,11 @@ function Calendar(props) {
   const daysInMonth = () => {
     const startDay = currentMonth().startOf('month').startOf('week');
     const endDay = currentMonth().endOf('month').endOf('week');
-    const date = startDay.clone().subtract(1, 'day');
+    let date = startDay.clone().subtract(1, 'day');
     const days = [];
     while (date.isBefore(endDay, 'day')) {
-      days.push(date.add(1, 'day').clone());
+      date = date.add(1, 'day');
+      days.push(date.clone());
     }
     return days;
   };

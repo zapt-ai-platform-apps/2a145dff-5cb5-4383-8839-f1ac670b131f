@@ -1,4 +1,4 @@
-import { createSignal, onMount, createEffect } from 'solid-js';
+import { createSignal, onMount, onCleanup } from 'solid-js';
 import { supabase } from './supabaseClient';
 import { Routes, Route, useNavigate } from '@solidjs/router';
 import Home from './pages/Home';
@@ -21,9 +21,7 @@ function App() {
 
   onMount(() => {
     checkUserSignedIn();
-  });
 
-  createEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (session?.user) {
         setUser(session.user);
@@ -34,9 +32,9 @@ function App() {
       }
     });
 
-    return () => {
+    onCleanup(() => {
       subscription.unsubscribe();
-    };
+    });
   });
 
   return (

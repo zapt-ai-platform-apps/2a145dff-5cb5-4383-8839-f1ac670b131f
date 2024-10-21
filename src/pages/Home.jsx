@@ -43,7 +43,6 @@ function Home(props) {
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
-    setUser(null);
     navigate('/');
   };
 
