@@ -1,6 +1,3 @@
-import { config } from 'dotenv';
-config();
-
 import { authenticateUser } from './_apiUtils.js';
 import { db } from './_db.js';
 import { preferences, exams, preferencesToExams, users } from '../drizzle/schema.js';

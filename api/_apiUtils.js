@@ -1,6 +1,3 @@
-import { config } from 'dotenv';
-config();
-
 import { initializeZapt } from '@zapt/zapt-js';
 
 export const { supabase } = initializeZapt(process.env.VITE_PUBLIC_APP_ID);

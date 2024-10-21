@@ -78,3 +78,12 @@ Upgrade is an application designed to help students create a personalized revisi
 - **Neon Database**:
   - Serves as the backend database to store user preferences, exams, and sessions.
   - Provides a scalable and efficient storage solution for application data.
+
+## Environment Setup
+
+Ensure you add the required environment variables in your deployment settings:
+
+- **VITE_PUBLIC_APP_ID**: Your ZAPT application ID.
+- **NEON_DB_URL**: Your Neon database connection URL.
+
+Remember, do not include these sensitive values directly in the code or commit them to version control.
