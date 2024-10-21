@@ -3,7 +3,7 @@ config();
 
 import { authenticateUser } from './_apiUtils.js';
 import { db } from './_db.js';
-import { preferences, exams, preferencesToExams } from '../drizzle/schema.js';
+import { preferences, exams, preferencesToExams, users } from '../drizzle/schema.js';
 import { eq } from 'drizzle-orm';
 import { initializeZapt } from '@zapt/zapt-js';
 
@@ -19,15 +19,41 @@ export default async function handler(req, res) {
     const user = await authenticateUser(req);
     const { exams: userExams, sessionPreferences } = req.body;
 
-    // Save preferences
-    await db
-      .insert(preferences)
-      .values({
-        userId: user.id,
-        sessionLength: sessionPreferences.sessionLength,
-        days: sessionPreferences.days,
-        delayStart: sessionPreferences.delayStart,
+    // Check if the user exists in the users table
+    const existingUser = await db.select().from(users).where(eq(users.id, user.id)).limit(1);
+
+    if (existingUser.length === 0) {
+      // If the user doesn't exist, insert them into the users table
+      await db.insert(users).values({
+        id: user.id,
+        email: user.email,
       });
+    }
+
+    // Check if preferences already exist for this user
+    const existingPreferences = await db.select().from(preferences).where(eq(preferences.userId, user.id)).limit(1);
+
+    if (existingPreferences.length > 0) {
+      // Update existing preferences
+      await db
+        .update(preferences)
+        .set({
+          sessionLength: sessionPreferences.sessionLength,
+          days: sessionPreferences.days,
+          delayStart: sessionPreferences.delayStart,
+        })
+        .where(eq(preferences.userId, user.id));
+    } else {
+      // Insert new preferences
+      await db
+        .insert(preferences)
+        .values({
+          userId: user.id,
+          sessionLength: sessionPreferences.sessionLength,
+          days: sessionPreferences.days,
+          delayStart: sessionPreferences.delayStart,
+        });
+    }
 
     // Delete old exams and mappings
     await db.delete(preferencesToExams).where(eq(preferencesToExams.userId, user.id));
