@@ -14,18 +14,19 @@ Upgrade is an app designed to help students create a personalized revision timet
    - A link to [ZAPT](https://www.zapt.ai) is available, opening in a new tab.
 
 2. **Initial Setup**
-   - Upon first login, the student is presented with exams they will be sitting, including dates, examination boards, and their teachers.
+   - Upon first login, if the student hasn't set up their preferences, they are directed to the setup page.
+   - The student is presented with exams they will be sitting, including dates, examination boards, and their teachers.
    - The student selects the exams they will be taking.
 
 3. **Setting Preferences**
    - The student selects which days of the week they would like to revise, choosing between morning, afternoon, or both for each day.
    - The student specifies the desired length of each revision session (from 30 minutes to 2 hours).
-   - An option is available to delay the start date of the revision schedule if desired.
+   - An option is available to delay the start date of the revision schedule by one week if desired.
 
 4. **Generating Timetable**
    - Based on the provided information and preferences, the app generates a revision timetable in a monthly calendar view.
    - Each session is scheduled between the current date (or delayed start date) and a week before the exam date.
-   - Sessions are assigned to subjects either equally or weighted based on the student's confidence levels in each subject (if provided).
+   - Sessions are assigned to subjects either equally or weighted based on the student's confidence levels (if provided).
 
 5. **Using the Timetable**
    - The student can view their timetable, which outlines the subjects and topics to study in each session.
@@ -39,10 +40,6 @@ Upgrade is an app designed to help students create a personalized revision timet
 7. **Customization**
    - The student can edit the subject or length of a session directly within the calendar.
    - The design is responsive and user-friendly across all devices.
-
-8. **Confidence Ranking (Optional)**
-   - The student has the option to rank their confidence in each subject on a scale from 1 to 3.
-   - The app weights the scheduling of sessions based on these rankings, allocating more time to subjects with lower confidence scores.
 
 ### Teacher Journey
 
@@ -58,9 +55,6 @@ Upgrade is an app designed to help students create a personalized revision timet
 
 - **ZAPT Authentication**
   - Used for student and teacher authentication, providing secure account management.
-
-- **Exam Syllabus API** (Placeholder)
-  - Fetches the exam syllabus content to populate revision sessions with specific topics.
 
 ## Environment Variables
 

@@ -11,21 +11,18 @@ function Home(props) {
   const fetchTimetable = async () => {
     setLoading(true);
     try {
-      // Fetch the generated timetable from the backend
-      // TODO: Implement API call to fetch timetable
-      const mockTimetable = [
-        // Mock data representing revision sessions
-        {
-          id: 1,
-          subject: 'Mathematics',
-          topic: 'Algebra',
-          date: '2023-11-01',
-          time: 'morning',
-          completed: false,
+      const { data: { session } } = await supabase.auth.getSession();
+      const response = await fetch('/api/getTimetable', {
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
         },
-        // Add more sessions as needed
-      ];
-      setTimetable(mockTimetable);
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setTimetable(data);
+      } else {
+        console.error(data.error);
+      }
     } catch (error) {
       console.error('Error fetching timetable:', error);
     } finally {
@@ -49,8 +46,15 @@ function Home(props) {
   const markSession = async (sessionId, completed) => {
     setLoading(true);
     try {
-      // Update the session status in the backend
-      // TODO: Implement API call to update session status
+      // Implement API call to update session status
+      await fetch('/api/updateSession', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${supabase.auth.session().access_token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ sessionId, completed }),
+      });
       setTimetable(
         timetable().map((session) =>
           session.id === sessionId ? { ...session, completed } : session
@@ -66,11 +70,18 @@ function Home(props) {
   const rescheduleSession = async (sessionId, newDate, newTime) => {
     setLoading(true);
     try {
-      // Update the session date and time in the backend
-      // TODO: Implement API call to reschedule session
+      // Implement API call to reschedule session
+      await fetch('/api/rescheduleSession', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${supabase.auth.session().access_token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ sessionId, newDate, newTime }),
+      });
       setTimetable(
         timetable().map((session) =>
-          session.id === sessionId ? { ...session, date: newDate, time: newTime } : session
+          session.id === sessionId ? { ...session, date: newDate, timeOfDay: newTime } : session
         )
       );
     } catch (error) {

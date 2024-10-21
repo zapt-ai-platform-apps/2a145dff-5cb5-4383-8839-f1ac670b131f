@@ -1,5 +1,6 @@
 import { createSignal, onMount, Show, For } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
+import { supabase } from '../supabaseClient';
 
 function Setup(props) {
   const [examInfo, setExamInfo] = createSignal([]);
@@ -23,11 +24,10 @@ function Setup(props) {
   const fetchExamInfo = async () => {
     setLoading(true);
     try {
-      // Replace this with actual API call to fetch exam info provided by schools
+      // Replace this with actual API call to fetch exam info
       const exams = [
         { id: 1, subject: 'Mathematics', date: '2023-12-15', board: 'AQA', teacher: 'Mr. Smith' },
         { id: 2, subject: 'English Literature', date: '2023-12-20', board: 'Edexcel', teacher: 'Ms. Johnson' },
-        // Add more exams as needed
       ];
       setExamInfo(exams);
     } catch (error) {
@@ -61,8 +61,18 @@ function Setup(props) {
     }
     setLoading(true);
     try {
-      // Save the preferences to the backend
-      // TODO: Implement API call to save preferences
+      const { data: { session } } = await supabase.auth.getSession();
+      await fetch('/api/savePreferences', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          selectedExams: selectedExams().map((exam) => exam.id),
+          sessionPreferences: sessionPreferences(),
+        }),
+      });
       navigate('/home');
     } catch (error) {
       console.error('Error saving preferences:', error);
@@ -156,7 +166,7 @@ function Setup(props) {
               setSessionPreferences({ ...sessionPreferences(), delayStart: e.target.checked })
             }
           />
-          <label for="delay-start" class="cursor-pointer">Delay Start Date</label>
+          <label for="delay-start" class="cursor-pointer">Delay Start Date by One Week</label>
         </div>
 
         <button

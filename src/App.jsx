@@ -10,12 +10,30 @@ function App() {
   const navigate = useNavigate();
 
   const checkUserSignedIn = async () => {
-    const { data: { session }, error } = await supabase.auth.getSession();
+    const { data: { session } } = await supabase.auth.getSession();
     if (session?.user) {
       setUser(session.user);
-      navigate('/home', { replace: true });
+      checkUserPreferences(session);
     } else {
       navigate('/', { replace: true });
+    }
+  };
+
+  const checkUserPreferences = async (session) => {
+    try {
+      const response = await fetch('/api/hasPreferences', {
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+      });
+      const data = await response.json();
+      if (data.hasPreferences) {
+        navigate('/home', { replace: true });
+      } else {
+        navigate('/setup', { replace: true });
+      }
+    } catch (error) {
+      console.error('Error checking preferences:', error);
     }
   };
 
@@ -25,7 +43,7 @@ function App() {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (session?.user) {
         setUser(session.user);
-        navigate('/home', { replace: true });
+        checkUserPreferences(session);
       } else {
         setUser(null);
         navigate('/', { replace: true });
