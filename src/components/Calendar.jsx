@@ -33,7 +33,7 @@ function Calendar(props) {
   };
 
   return (
-    <div class="min-h-screen h-full">
+    <div class="h-full">
       <div class="flex justify-between items-center mb-4">
         <button
           onClick={prevMonth}
