@@ -10,19 +10,21 @@ function App() {
   const navigate = useNavigate();
 
   const checkUserSignedIn = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      setUser(user);
+    const { data: { session }, error } = await supabase.auth.getSession();
+    if (session?.user) {
+      setUser(session.user);
       navigate('/home', { replace: true });
     } else {
       navigate('/', { replace: true });
     }
   };
 
-  onMount(checkUserSignedIn);
+  onMount(() => {
+    checkUserSignedIn();
+  });
 
   createEffect(() => {
-    const { data: authListener } = supabase.auth.onAuthStateChange((_, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (session?.user) {
         setUser(session.user);
         navigate('/home', { replace: true });
@@ -33,7 +35,7 @@ function App() {
     });
 
     return () => {
-      authListener.unsubscribe();
+      subscription.unsubscribe();
     };
   });
 
