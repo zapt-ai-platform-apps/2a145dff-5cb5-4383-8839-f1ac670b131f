@@ -6,6 +6,7 @@ import { db } from './_db.js';
 import { preferences, exams, preferencesToExams, users } from '../drizzle/schema.js';
 import { eq } from 'drizzle-orm';
 import { initializeZapt } from '@zapt/zapt-js';
+import dayjs from 'dayjs';
 
 const { createEvent } = initializeZapt(process.env.VITE_PUBLIC_APP_ID);
 
@@ -78,12 +79,15 @@ export default async function handler(req, res) {
           throw new Error('Invalid syllabus format received');
         }
 
+        // Format the date using dayjs
+        const formattedDate = dayjs(exam.date).toISOString();
+
         // Insert exam into the exams table
         const [insertedExam] = await db
           .insert(exams)
           .values({
             subject: exam.subject,
-            date: exam.date,
+            date: formattedDate,
             board: exam.board || '',
             teacherId: null,
             syllabus,
@@ -103,12 +107,15 @@ export default async function handler(req, res) {
         // Handle the error by setting a default syllabus
         let defaultSyllabus = [`Study ${exam.subject}`];
 
+        // Format the date using dayjs
+        const formattedDate = dayjs(exam.date).toISOString();
+
         // Insert exam with default syllabus
         const [insertedExam] = await db
           .insert(exams)
           .values({
             subject: exam.subject,
-            date: exam.date,
+            date: formattedDate,
             board: exam.board || '',
             teacherId: null,
             syllabus: defaultSyllabus,
