@@ -19,7 +19,7 @@ Upgrade is an app designed to help students create a personalized revision timet
    - They can add multiple exams to their schedule.
 
 3. **Fetching Syllabus**
-   - For each exam added, the app automatically fetches the detailed syllabus using AI, ensuring all topics are covered in the revision timetable.
+   - For each exam added, the app automatically fetches the detailed syllabus using AI via the 'chatgpt_request' event, ensuring all topics are covered in the revision timetable.
 
 4. **Setting Preferences**
    - The student selects which days of the week they would like to revise, choosing between morning, afternoon, or both for each day.
@@ -30,7 +30,6 @@ Upgrade is an app designed to help students create a personalized revision timet
    - Based on the provided exams, syllabus, and preferences, the app generates a revision timetable in a monthly calendar view.
    - Each session is scheduled between the current date (or delayed start date) and a week before the exam date.
    - Sessions are intelligently assigned topics from the syllabus, ensuring comprehensive coverage.
-   - If the student provided confidence levels (if implemented), the sessions can be weighted accordingly.
 
 6. **Using the Timetable**
    - The student can view their timetable, which outlines the subjects and specific topics to study in each session.
@@ -45,20 +44,16 @@ Upgrade is an app designed to help students create a personalized revision timet
    - The student can edit the subject or length of a session directly within the calendar.
    - The design is responsive and user-friendly across all devices.
 
-## External APIs Used
+## External Services Used
 
-- **OpenAI API**
-  - Used to fetch the detailed syllabus for each exam subject added by the student.
-  - This ensures that the revision timetable covers all necessary topics.
-
-- **ZAPT Authentication**
-  - Used for student authentication, providing secure account management.
+- **ZAPT Platform**
+  - Used for student authentication and for generating AI responses via the 'chatgpt_request' event.
+  - The 'chatgpt_request' event is used to fetch the detailed syllabus for each exam subject added by the student, ensuring that the revision timetable covers all necessary topics.
 
 ## Environment Variables
 
 - `VITE_PUBLIC_APP_ID`: Your app ID for ZAPT integration.
 - `NEON_DB_URL`: Your Neon database URL for storing app data.
-- `OPENAI_API_KEY`: Your OpenAI API key for fetching exam syllabi.
 
 ## Notes
 

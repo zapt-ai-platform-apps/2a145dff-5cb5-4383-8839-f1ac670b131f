@@ -5,12 +5,9 @@ import { authenticateUser } from './_apiUtils.js';
 import { db } from './_db.js';
 import { preferences, exams, preferencesToExams } from '../drizzle/schema.js';
 import { eq } from 'drizzle-orm';
-import { Configuration, OpenAIApi } from 'openai';
+import { initializeZapt } from '@zapt/zapt-js';
 
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
+const { createEvent } = initializeZapt(process.env.VITE_PUBLIC_APP_ID);
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -43,51 +40,45 @@ export default async function handler(req, res) {
 
     // Delete old exams and mappings
     await db.delete(preferencesToExams).where(eq(preferencesToExams.userId, user.id));
-    // Optionally, delete exams associated with the user, or keep them
 
     const examsData = [];
 
     // For each exam provided by the user
     for (const exam of userExams) {
-      // Fetch syllabus using OpenAI API
+      // Fetch syllabus using 'chatgpt_request' event
       const prompt = `Provide a detailed syllabus breakdown in JSON format for the ${exam.subject} exam. The response should be an array of topics under a "syllabus" key, like: { "syllabus": ["Topic1", "Topic2", ...] }`;
 
-      const completion = await openai.createCompletion({
-        model: 'text-davinci-003',
-        prompt: prompt,
-        max_tokens: 500,
-        temperature: 0.7,
-      });
-
-      const responseText = completion.data.choices[0].text.trim();
-      let syllabus = [];
-
       try {
-        const parsedResponse = JSON.parse(responseText);
-        syllabus = parsedResponse.syllabus || [];
+        const result = await createEvent('chatgpt_request', {
+          prompt: prompt,
+          response_type: 'json',
+        });
+
+        let syllabus = result.syllabus || [];
+
+        // Insert exam into the exams table
+        const [insertedExam] = await db
+          .insert(exams)
+          .values({
+            subject: exam.subject,
+            date: exam.date,
+            board: exam.board || '',
+            teacherId: null,
+            syllabus,
+          })
+          .returning();
+
+        examsData.push(insertedExam);
+
+        // Link exam to user preferences
+        await db.insert(preferencesToExams).values({
+          userId: user.id,
+          examId: insertedExam.id,
+        });
       } catch (err) {
-        console.error('Error parsing syllabus:', err);
-        syllabus = [];
+        console.error('Error fetching syllabus:', err);
+        throw new Error('Error fetching syllabus');
       }
-
-      // Insert exam into the exams table
-      const [insertedExam] = await db.insert(exams)
-        .values({
-          subject: exam.subject,
-          date: exam.date,
-          board: exam.board || '',
-          teacherId: null,
-          syllabus,
-        })
-        .returning();
-
-      examsData.push(insertedExam);
-
-      // Link exam to user preferences
-      await db.insert(preferencesToExams).values({
-        userId: user.id,
-        examId: insertedExam.id,
-      });
     }
 
     res.status(200).json({ message: 'Preferences and exams saved successfully' });
