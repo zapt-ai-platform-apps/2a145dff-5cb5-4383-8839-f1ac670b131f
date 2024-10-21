@@ -5,7 +5,7 @@ config();
 export default {
   schema: "./drizzle/schema.js",
   out: "./drizzle",
-  driver: 'pg',
+  dialect: 'postgres',
   dbCredentials: {
     connectionString: process.env.NEON_DB_URL,
   },

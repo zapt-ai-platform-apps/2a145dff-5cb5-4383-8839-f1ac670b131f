@@ -69,3 +69,12 @@ Upgrade is an application designed to help students create a personalized revisi
 - **User-Friendly Design**: Buttons have hover effects and are disabled during loading states to prevent multiple submissions.
 - **Responsiveness**: The app is designed to be responsive, providing a seamless experience on both desktop and mobile devices.
 - **Drag-and-Drop Functionality**: Implemented using '@neodrag/solid' for intuitive rescheduling of sessions.
+
+## External APIs and Services
+
+- **ChatGPT (via ZAPT Platform)**:
+  - Used for fetching the detailed syllabus for each exam subject.
+  - Ensures that all relevant topics are covered in the generated timetable.
+- **Neon Database**:
+  - Serves as the backend database to store user preferences, exams, and sessions.
+  - Provides a scalable and efficient storage solution for application data.
