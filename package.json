@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "drizzle-kit push:pg --config=./drizzle.config.js && vite build",
+    "build": "drizzle-kit push:pg && vite build",
     "serve": "vite preview",
-    "migrate": "drizzle-kit push:pg --config=./drizzle.config.js"
+    "migrate": "drizzle-kit push:pg"
   },
   "dependencies": {
     "@neodrag/solid": "2.0.4",

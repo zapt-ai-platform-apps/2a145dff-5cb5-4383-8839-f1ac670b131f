@@ -1,10 +1,11 @@
-import { defineConfig } from "drizzle-kit";
+import { config } from 'dotenv';
+config();
 
-export default defineConfig({
-  dialect: "postgresql",
+export default {
   schema: "./drizzle/schema.js",
   out: "./drizzle",
+  driver: 'pg',
   dbCredentials: {
-    url: process.env.NEON_DB_URL,
+    connectionString: process.env.NEON_DB_URL,
   },
-});
+};
