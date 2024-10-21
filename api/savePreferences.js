@@ -19,7 +19,7 @@ export default async function handler(req, res) {
     const user = await authenticateUser(req);
     const { exams: userExams, sessionPreferences } = req.body;
 
-    // Save or Update preferences
+    // Save preferences
     await db
       .insert(preferences)
       .values({
@@ -27,14 +27,6 @@ export default async function handler(req, res) {
         sessionLength: sessionPreferences.sessionLength,
         days: sessionPreferences.days,
         delayStart: sessionPreferences.delayStart,
-      })
-      .onConflictDoUpdate({
-        target: preferences.userId,
-        set: {
-          sessionLength: sessionPreferences.sessionLength,
-          days: sessionPreferences.days,
-          delayStart: sessionPreferences.delayStart,
-        },
       });
 
     // Delete old exams and mappings
