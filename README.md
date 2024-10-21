@@ -2,63 +2,70 @@
 
 ## Overview
 
-Upgrade is an app designed to help students create a personalized revision timetable in preparation for their school examinations. The app schedules revision sessions based on the student's availability and preferences, ensuring comprehensive coverage of all exam topics by generating study sessions that cover the entire syllabus.
+Upgrade is an application designed to help students create a personalized revision timetable for their upcoming school examinations. By inputting their exam details and preferences, students receive a comprehensive study schedule that covers all topics in their syllabi, ensuring they are thoroughly prepared for each exam.
 
 ## User Journeys
 
-### Student Journey
+### 1. Account Creation and Login
 
-1. **Account Creation**
-   - The student navigates to the app and creates an account using their email address or signs in using Google, Facebook, or Apple.
-   - They see "Sign in with ZAPT" above the authentication options.
-   - A link to [ZAPT](https://www.zapt.ai) is available, opening in a new tab.
+1. **Visit the App**: The student navigates to the Upgrade app.
+2. **Sign In**: They see "Sign in with ZAPT" above the authentication options.
+3. **Choose Authentication Method**: The student can sign in using their email or social login providers like Google, Facebook, or Apple.
+4. **Learn More**: A link to [ZAPT](https://www.zapt.ai) is available, opening in a new tab for students who want more information.
 
-2. **Initial Setup**
-   - Upon first login, if the student hasn't set up their preferences, they are directed to the setup page.
-   - The student adds their exams by entering the subject, date, and optional examination board.
-   - They can add multiple exams to their schedule.
+### 2. Initial Setup
 
-3. **Fetching Syllabus**
-   - For each exam added, the app automatically fetches the detailed syllabus using AI via the 'chatgpt_request' event, ensuring all topics are covered in the revision timetable.
+1. **Redirect to Setup**: Upon first login, if the student hasn't set up their preferences, they are directed to the setup page.
+2. **Add Exams**:
+   - **Input Details**: The student enters each exam's subject, date, and optional examination board.
+   - **Multiple Exams**: They can add multiple exams by repeating the process.
+3. **Set Availability**:
+   - **Select Days**: The student selects which days of the week they are available to study.
+   - **Choose Times**: For each selected day, they specify whether they can study in the morning, afternoon, or both.
+4. **Session Preferences**:
+   - **Session Length**: They set the desired length of each revision session (ranging from 30 minutes to 2 hours).
+   - **Delay Start Option**: An option is available to delay the start date of the revision schedule by one week if desired.
 
-4. **Setting Preferences**
-   - The student selects which days of the week they would like to revise, choosing between morning, afternoon, or both for each day.
-   - The student specifies the desired length of each revision session (from 30 minutes to 2 hours).
-   - An option is available to delay the start date of the revision schedule by one week if desired.
+### 3. Generating the Timetable
 
-5. **Generating Timetable**
-   - Based on the provided exams, syllabus, and preferences, the app generates a revision timetable in a monthly calendar view.
-   - Each session is scheduled between the current date (or delayed start date) and a week before the exam date.
-   - Sessions are intelligently assigned topics from the syllabus, ensuring comprehensive coverage.
+1. **Fetch Syllabus**: The app automatically fetches the detailed syllabus for each exam subject using AI via the 'chatgpt_request' event, ensuring all topics are covered.
+2. **Create Schedule**:
+   - **Algorithm**: Based on the exams, syllabi, and preferences, the app generates a personalized revision timetable.
+   - **Scheduling**: Sessions are spread between the current date (or delayed start date) and one week before the exam date.
+   - **Topic Coverage**: Each session is assigned specific topics from the syllabus, ensuring comprehensive coverage before the exam.
 
-6. **Using the Timetable**
-   - The student can view their timetable, which outlines the subjects and specific topics to study in each session.
-   - Sessions can be marked as complete or incomplete.
-   - The timetable ensures that all syllabus topics are reviewed before the exam.
+### 4. Using the Timetable
 
-7. **Rescheduling Sessions**
-   - The student can drag and drop sessions to different times or days within the calendar.
-   - Upon dragging a session, the student can reschedule it to a new date and time.
+1. **View Calendar**: The student views their timetable in a monthly calendar format.
+2. **Session Details**:
+   - **Session Info**: Each session displays the subject and specific topics to study.
+   - **Completion Status**: Sessions can be marked as complete or incomplete.
+3. **Interactivity**:
+   - **Rescheduling**: Students can drag and drop sessions to different dates or times directly within the calendar.
+   - **Editing**: They can edit the subject or length of a session as needed.
+4. **Responsive Design**: The app provides a user-friendly experience across all devices, ensuring accessibility and ease of use.
 
-8. **Customization**
-   - The student can edit the subject or length of a session directly within the calendar.
-   - The design is responsive and user-friendly across all devices.
+### 5. Account Management
+
+1. **Sign Out**: Students can securely sign out of their account using the "Sign Out" button.
+2. **Session Persistence**: All data is saved, ensuring that their timetable and preferences are maintained upon subsequent logins.
 
 ## External Services Used
 
-- **ZAPT Platform**
-  - Used for student authentication and for generating AI responses via the 'chatgpt_request' event.
-  - The 'chatgpt_request' event is used to fetch the detailed syllabus for each exam subject added by the student, ensuring that the revision timetable covers all necessary topics.
+- **ZAPT Platform**:
+  - Used for secure user authentication.
+  - Facilitates AI interactions through events like 'chatgpt_request' for fetching syllabi.
 
 ## Environment Variables
 
-- `VITE_PUBLIC_APP_ID`: Your app ID for ZAPT integration.
-- `NEON_DB_URL`: Your Neon database URL for storing app data.
+- `VITE_PUBLIC_APP_ID`: The App ID for ZAPT integration.
+- `NEON_DB_URL`: The connection string for the Neon database used to store application data.
 
 ## Notes
 
-- The app is free to use.
-- The calendar supports drag-and-drop functionality for easy rescheduling.
-- The design is responsive and user-friendly across all devices.
-- All buttons have hover effects and are disabled during loading states to prevent multiple submissions.
-- The app uses '@neodrag/solid' for drag-and-drop functionality.
+- **Free to Use**: The app is completely free for students.
+- **No API Costs**: All AI requests and functionalities are handled without additional costs to the user.
+- **Real-Time Updates**: Changes in authentication state (sign in/out) are immediately reflected in the UI without requiring a page refresh.
+- **User-Friendly Design**: Buttons have hover effects and are disabled during loading states to prevent multiple submissions.
+- **Responsiveness**: The app is designed to be responsive, providing a seamless experience on both desktop and mobile devices.
+- **Drag-and-Drop Functionality**: Implemented using '@neodrag/solid' for intuitive rescheduling of sessions.
