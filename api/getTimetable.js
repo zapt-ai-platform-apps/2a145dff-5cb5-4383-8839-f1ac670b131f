@@ -13,33 +13,39 @@ function generateSessions(preferencesData, examsData) {
     const examDate = dayjs(exam.date);
     let currentDate = startDate.clone();
 
-    const syllabusTopics = exam.syllabus || [];
+    const syllabusTopics = Array.isArray(exam.syllabus) && exam.syllabus.length > 0 ? exam.syllabus : [`Study ${exam.subject}`];
     let topicIndex = 0;
 
     while (currentDate.isBefore(examDate.subtract(1, 'week')) && topicIndex < syllabusTopics.length) {
       const dayOfWeek = currentDate.format('dddd');
       const availableTimes = days[dayOfWeek];
 
-      if (availableTimes.morning && topicIndex < syllabusTopics.length) {
-        sessionsList.push({
-          userId: preferencesData.userId,
-          examId: exam.id,
-          date: currentDate.format('YYYY-MM-DD'),
-          timeOfDay: 'morning',
-          topic: syllabusTopics[topicIndex] || `Study ${exam.subject} - Morning Session`,
-        });
-        topicIndex++;
-      }
+      if (availableTimes) {
+        if (availableTimes.morning && topicIndex < syllabusTopics.length) {
+          sessionsList.push({
+            userId: preferencesData.userId,
+            examId: exam.id,
+            date: currentDate.format('YYYY-MM-DD'),
+            timeOfDay: 'morning',
+            topic: syllabusTopics[topicIndex] || `Study ${exam.subject} - Morning Session`,
+            subject: exam.subject,
+            completed: false,
+          });
+          topicIndex++;
+        }
 
-      if (availableTimes.afternoon && topicIndex < syllabusTopics.length) {
-        sessionsList.push({
-          userId: preferencesData.userId,
-          examId: exam.id,
-          date: currentDate.format('YYYY-MM-DD'),
-          timeOfDay: 'afternoon',
-          topic: syllabusTopics[topicIndex] || `Study ${exam.subject} - Afternoon Session`,
-        });
-        topicIndex++;
+        if (availableTimes.afternoon && topicIndex < syllabusTopics.length) {
+          sessionsList.push({
+            userId: preferencesData.userId,
+            examId: exam.id,
+            date: currentDate.format('YYYY-MM-DD'),
+            timeOfDay: 'afternoon',
+            topic: syllabusTopics[topicIndex] || `Study ${exam.subject} - Afternoon Session`,
+            subject: exam.subject,
+            completed: false,
+          });
+          topicIndex++;
+        }
       }
 
       currentDate = currentDate.add(1, 'day');
@@ -83,9 +89,8 @@ export default async function handler(req, res) {
 
       if (generatedSessions.length > 0) {
         await db.insert(sessions).values(generatedSessions);
+        userSessions = generatedSessions;
       }
-
-      userSessions = generatedSessions;
     }
 
     res.status(200).json(userSessions);

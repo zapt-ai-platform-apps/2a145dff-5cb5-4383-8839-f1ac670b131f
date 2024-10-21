@@ -29,6 +29,7 @@ export const sessions = pgTable('sessions', {
   date: timestamp('date').notNull(),
   timeOfDay: text('time_of_day').notNull(),
   topic: text('topic').notNull(),
+  subject: text('subject').notNull(),
   completed: boolean('completed').default(false),
   createdAt: timestamp('created_at').defaultNow(),
 });

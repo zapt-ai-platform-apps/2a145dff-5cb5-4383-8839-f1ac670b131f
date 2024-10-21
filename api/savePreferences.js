@@ -46,7 +46,7 @@ export default async function handler(req, res) {
     // For each exam provided by the user
     for (const exam of userExams) {
       // Fetch syllabus using 'chatgpt_request' event
-      const prompt = `Provide a detailed syllabus breakdown in JSON format for the ${exam.subject} exam. The response should be an array of topics under a "syllabus" key, like: { "syllabus": ["Topic1", "Topic2", ...] }`;
+      const prompt = `Provide a detailed list of topics for the ${exam.subject} exam. The response should be in JSON format with a "syllabus" key, like this: { "syllabus": ["Topic 1", "Topic 2", "Topic 3"] }`;
 
       try {
         const result = await createEvent('chatgpt_request', {
@@ -54,7 +54,12 @@ export default async function handler(req, res) {
           response_type: 'json',
         });
 
-        let syllabus = result.syllabus || [];
+        console.log('Received syllabus:', result);
+
+        let syllabus = result.syllabus;
+        if (!Array.isArray(syllabus)) {
+          throw new Error('Invalid syllabus format received');
+        }
 
         // Insert exam into the exams table
         const [insertedExam] = await db
@@ -77,7 +82,29 @@ export default async function handler(req, res) {
         });
       } catch (err) {
         console.error('Error fetching syllabus:', err);
-        throw new Error('Error fetching syllabus');
+
+        // Handle the error by setting a default syllabus
+        let defaultSyllabus = [`Study ${exam.subject}`];
+
+        // Insert exam with default syllabus
+        const [insertedExam] = await db
+          .insert(exams)
+          .values({
+            subject: exam.subject,
+            date: exam.date,
+            board: exam.board || '',
+            teacherId: null,
+            syllabus: defaultSyllabus,
+          })
+          .returning();
+
+        examsData.push(insertedExam);
+
+        // Link exam to user preferences
+        await db.insert(preferencesToExams).values({
+          userId: user.id,
+          examId: insertedExam.id,
+        });
       }
     }
 

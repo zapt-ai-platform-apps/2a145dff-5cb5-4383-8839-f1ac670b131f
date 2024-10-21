@@ -46,11 +46,12 @@ function Home(props) {
   const markSession = async (sessionId, completed) => {
     setLoading(true);
     try {
-      // Implement API call to update session status
+      const { data: { session } } = await supabase.auth.getSession();
+
       await fetch('/api/updateSession', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${supabase.auth.session().access_token}`,
+          'Authorization': `Bearer ${session.access_token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ sessionId, completed }),
@@ -70,11 +71,12 @@ function Home(props) {
   const rescheduleSession = async (sessionId, newDate, newTime) => {
     setLoading(true);
     try {
-      // Implement API call to reschedule session
+      const { data: { session } } = await supabase.auth.getSession();
+
       await fetch('/api/rescheduleSession', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${supabase.auth.session().access_token}`,
+          'Authorization': `Bearer ${session.access_token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ sessionId, newDate, newTime }),
