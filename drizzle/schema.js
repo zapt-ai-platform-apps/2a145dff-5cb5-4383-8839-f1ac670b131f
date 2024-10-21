@@ -11,8 +11,9 @@ export const exams = pgTable('exams', {
   id: serial('id').primaryKey(),
   subject: text('subject').notNull(),
   date: timestamp('date').notNull(),
-  board: text('board').notNull(),
+  board: text('board'),
   teacherId: uuid('teacher_id').references(() => users.id),
+  syllabus: json('syllabus'),
   createdAt: timestamp('created_at').defaultNow(),
 });
 

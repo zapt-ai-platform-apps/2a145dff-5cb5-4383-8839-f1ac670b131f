@@ -13,28 +13,33 @@ function generateSessions(preferencesData, examsData) {
     const examDate = dayjs(exam.date);
     let currentDate = startDate.clone();
 
-    while (currentDate.isBefore(examDate.subtract(1, 'week'))) {
+    const syllabusTopics = exam.syllabus || [];
+    let topicIndex = 0;
+
+    while (currentDate.isBefore(examDate.subtract(1, 'week')) && topicIndex < syllabusTopics.length) {
       const dayOfWeek = currentDate.format('dddd');
       const availableTimes = days[dayOfWeek];
 
-      if (availableTimes.morning) {
+      if (availableTimes.morning && topicIndex < syllabusTopics.length) {
         sessionsList.push({
           userId: preferencesData.userId,
           examId: exam.id,
           date: currentDate.format('YYYY-MM-DD'),
           timeOfDay: 'morning',
-          topic: `Study ${exam.subject} - Morning Session`,
+          topic: syllabusTopics[topicIndex] || `Study ${exam.subject} - Morning Session`,
         });
+        topicIndex++;
       }
 
-      if (availableTimes.afternoon) {
+      if (availableTimes.afternoon && topicIndex < syllabusTopics.length) {
         sessionsList.push({
           userId: preferencesData.userId,
           examId: exam.id,
           date: currentDate.format('YYYY-MM-DD'),
           timeOfDay: 'afternoon',
-          topic: `Study ${exam.subject} - Afternoon Session`,
+          topic: syllabusTopics[topicIndex] || `Study ${exam.subject} - Afternoon Session`,
         });
+        topicIndex++;
       }
 
       currentDate = currentDate.add(1, 'day');

@@ -2,64 +2,63 @@
 
 ## Overview
 
-Upgrade is an app designed to help students create a personalized revision timetable in preparation for their school examinations. The app schedules revision sessions based on the student's availability and preferences, ensuring an equal distribution of study time across all subjects or weighted based on confidence levels.
+Upgrade is an app designed to help students create a personalized revision timetable in preparation for their school examinations. The app schedules revision sessions based on the student's availability and preferences, ensuring comprehensive coverage of all exam topics by generating study sessions that cover the entire syllabus.
 
 ## User Journeys
 
 ### Student Journey
 
 1. **Account Creation**
-   - The student navigates to the app and creates an account using their school email address or signs in using Google, Facebook, or Apple.
+   - The student navigates to the app and creates an account using their email address or signs in using Google, Facebook, or Apple.
    - They see "Sign in with ZAPT" above the authentication options.
    - A link to [ZAPT](https://www.zapt.ai) is available, opening in a new tab.
 
 2. **Initial Setup**
    - Upon first login, if the student hasn't set up their preferences, they are directed to the setup page.
-   - The student is presented with exams they will be sitting, including dates, examination boards, and their teachers.
-   - The student selects the exams they will be taking.
+   - The student adds their exams by entering the subject, date, and optional examination board.
+   - They can add multiple exams to their schedule.
 
-3. **Setting Preferences**
+3. **Fetching Syllabus**
+   - For each exam added, the app automatically fetches the detailed syllabus using AI, ensuring all topics are covered in the revision timetable.
+
+4. **Setting Preferences**
    - The student selects which days of the week they would like to revise, choosing between morning, afternoon, or both for each day.
    - The student specifies the desired length of each revision session (from 30 minutes to 2 hours).
    - An option is available to delay the start date of the revision schedule by one week if desired.
 
-4. **Generating Timetable**
-   - Based on the provided information and preferences, the app generates a revision timetable in a monthly calendar view.
+5. **Generating Timetable**
+   - Based on the provided exams, syllabus, and preferences, the app generates a revision timetable in a monthly calendar view.
    - Each session is scheduled between the current date (or delayed start date) and a week before the exam date.
-   - Sessions are assigned to subjects either equally or weighted based on the student's confidence levels (if provided).
+   - Sessions are intelligently assigned topics from the syllabus, ensuring comprehensive coverage.
+   - If the student provided confidence levels (if implemented), the sessions can be weighted accordingly.
 
-5. **Using the Timetable**
-   - The student can view their timetable, which outlines the subjects and topics to study in each session.
-   - Each session is dedicated to a specific section of the exam syllabus, ensuring comprehensive coverage of all topics.
+6. **Using the Timetable**
+   - The student can view their timetable, which outlines the subjects and specific topics to study in each session.
    - Sessions can be marked as complete or incomplete.
+   - The timetable ensures that all syllabus topics are reviewed before the exam.
 
-6. **Rescheduling Sessions**
+7. **Rescheduling Sessions**
    - The student can drag and drop sessions to different times or days within the calendar.
    - Upon dragging a session, the student can reschedule it to a new date and time.
 
-7. **Customization**
+8. **Customization**
    - The student can edit the subject or length of a session directly within the calendar.
    - The design is responsive and user-friendly across all devices.
 
-### Teacher Journey
-
-1. **Account Creation**
-   - The teacher creates an account using their school email address or signs in using Google, Facebook, or Apple.
-   - They see "Sign in with ZAPT" above the authentication options.
-
-2. **Viewing Student Progress**
-   - The teacher can view the progress of each student in their class for a particular subject.
-   - This includes seeing which sessions have been marked as complete or incomplete.
-
 ## External APIs Used
 
+- **OpenAI API**
+  - Used to fetch the detailed syllabus for each exam subject added by the student.
+  - This ensures that the revision timetable covers all necessary topics.
+
 - **ZAPT Authentication**
-  - Used for student and teacher authentication, providing secure account management.
+  - Used for student authentication, providing secure account management.
 
 ## Environment Variables
 
 - `VITE_PUBLIC_APP_ID`: Your app ID for ZAPT integration.
 - `NEON_DB_URL`: Your Neon database URL for storing app data.
+- `OPENAI_API_KEY`: Your OpenAI API key for fetching exam syllabi.
 
 ## Notes
 

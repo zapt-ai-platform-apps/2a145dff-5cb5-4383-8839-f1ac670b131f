@@ -3,8 +3,12 @@ import { useNavigate } from '@solidjs/router';
 import { supabase } from '../supabaseClient';
 
 function Setup(props) {
-  const [examInfo, setExamInfo] = createSignal([]);
-  const [selectedExams, setSelectedExams] = createSignal([]);
+  const [exams, setExams] = createSignal([]);
+  const [currentExam, setCurrentExam] = createSignal({
+    subject: '',
+    date: '',
+    board: '',
+  });
   const [sessionPreferences, setSessionPreferences] = createSignal({
     days: {
       Monday: { morning: false, afternoon: false },
@@ -21,25 +25,14 @@ function Setup(props) {
   const [loading, setLoading] = createSignal(false);
   const navigate = useNavigate();
 
-  const fetchExamInfo = async () => {
-    setLoading(true);
-    try {
-      // Replace this with actual API call to fetch exam info
-      const exams = [
-        { id: 1, subject: 'Mathematics', date: '2023-12-15', board: 'AQA', teacher: 'Mr. Smith' },
-        { id: 2, subject: 'English Literature', date: '2023-12-20', board: 'Edexcel', teacher: 'Ms. Johnson' },
-      ];
-      setExamInfo(exams);
-    } catch (error) {
-      console.error('Error fetching exam info:', error);
-    } finally {
-      setLoading(false);
+  const addExam = () => {
+    if (!currentExam().subject || !currentExam().date) {
+      alert('Please fill in the subject and date.');
+      return;
     }
+    setExams([...exams(), { ...currentExam() }]);
+    setCurrentExam({ subject: '', date: '', board: '' });
   };
-
-  onMount(() => {
-    fetchExamInfo();
-  });
 
   const handleDayToggle = (day, time) => {
     setSessionPreferences((prev) => ({
@@ -55,13 +48,14 @@ function Setup(props) {
   };
 
   const handleSubmit = async () => {
-    if (selectedExams().length === 0) {
-      alert('Please select at least one exam.');
+    if (exams().length === 0) {
+      alert('Please add at least one exam.');
       return;
     }
     setLoading(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
+      // Send exams and sessionPreferences to backend
       await fetch('/api/savePreferences', {
         method: 'POST',
         headers: {
@@ -69,7 +63,7 @@ function Setup(props) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          selectedExams: selectedExams().map((exam) => exam.id),
+          exams: exams(),
           sessionPreferences: sessionPreferences(),
         }),
       });
@@ -86,30 +80,55 @@ function Setup(props) {
       <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-6">
         <h1 class="text-3xl font-bold mb-6 text-purple-600">Setup Your Revision Schedule</h1>
 
-        <h2 class="text-2xl font-semibold mb-4">Select Your Exams</h2>
-        <Show when={!loading()} fallback={<p>Loading exams...</p>}>
-          <For each={examInfo()}>
-            {(exam) => (
-              <div class="flex items-center mb-2">
-                <input
-                  type="checkbox"
-                  id={`exam-${exam.id}`}
-                  class="cursor-pointer mr-2"
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setSelectedExams([...selectedExams(), exam]);
-                    } else {
-                      setSelectedExams(selectedExams().filter((ex) => ex.id !== exam.id));
-                    }
-                  }}
-                />
-                <label for={`exam-${exam.id}`} class="cursor-pointer">
-                  {`${exam.subject} - ${exam.board} - ${exam.date} - Teacher: ${exam.teacher}`}
-                </label>
-              </div>
-            )}
-          </For>
-        </Show>
+        <h2 class="text-2xl font-semibold mb-4">Add Your Exams</h2>
+        <div class="space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <input
+              type="text"
+              placeholder="Subject"
+              value={currentExam().subject}
+              onInput={(e) => setCurrentExam({ ...currentExam(), subject: e.target.value })}
+              class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+            />
+            <input
+              type="date"
+              placeholder="Date"
+              value={currentExam().date}
+              onInput={(e) => setCurrentExam({ ...currentExam(), date: e.target.value })}
+              class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+            />
+            <input
+              type="text"
+              placeholder="Board (Optional)"
+              value={currentExam().board}
+              onInput={(e) => setCurrentExam({ ...currentExam(), board: e.target.value })}
+              class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+            />
+          </div>
+          <button
+            onClick={addExam}
+            class="mt-2 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer disabled:opacity-50"
+            disabled={loading()}
+          >
+            Add Exam
+          </button>
+          <div class="mt-4">
+            <h3 class="text-xl font-semibold mb-2">Your Exams:</h3>
+            <For each={exams()}>
+              {(exam, index) => (
+                <div class="flex items-center justify-between mb-2">
+                  <p>{`${exam.subject} - ${exam.date} ${exam.board ? '- ' + exam.board : ''}`}</p>
+                  <button
+                    onClick={() => setExams(exams().filter((_, i) => i !== index()))}
+                    class="text-red-500 hover:text-red-700 cursor-pointer"
+                  >
+                    Remove
+                  </button>
+                </div>
+              )}
+            </For>
+          </div>
+        </div>
 
         <h2 class="text-2xl font-semibold mt-6 mb-4">Set Your Availability</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">

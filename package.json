@@ -18,7 +18,9 @@
     "drizzle-orm": "^0.33.0",
     "@neondatabase/serverless": "^0.9.5",
     "solid-js": "^1.8.22",
-    "solid-markdown": "^2.0.13"
+    "solid-markdown": "^2.0.13",
+    "openai": "^3.2.1",
+    "dotenv": "^16.0.3"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
