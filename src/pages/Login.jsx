@@ -1,4 +1,3 @@
-import { createSignal } from 'solid-js';
 import { supabase } from '../supabaseClient';
 import { Auth } from '@supabase/auth-ui-solid';
 import { ThemeSupa } from '@supabase/auth-ui-shared';

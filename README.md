@@ -9,11 +9,12 @@ Upgrade is an app designed to help students create a personalized revision timet
 ### Student Journey
 
 1. **Account Creation**
-   - The student navigates to the app and creates an account using their school email address and sets a password.
-   - Alternative sign-in options are available with Google, Facebook, or Apple.
+   - The student navigates to the app and creates an account using their school email address or signs in using Google, Facebook, or Apple.
+   - They see "Sign in with ZAPT" above the authentication options.
+   - A link to [ZAPT](https://www.zapt.ai) is available, opening in a new tab.
 
 2. **Initial Setup**
-   - Upon first login, the student is presented with exams they will be sitting, including dates, examination boards, and their teachers. This information is provided by the school.
+   - Upon first login, the student is presented with exams they will be sitting, including dates, examination boards, and their teachers.
    - The student selects the exams they will be taking.
 
 3. **Setting Preferences**
@@ -29,15 +30,15 @@ Upgrade is an app designed to help students create a personalized revision timet
 5. **Using the Timetable**
    - The student can view their timetable, which outlines the subjects and topics to study in each session.
    - Each session is dedicated to a specific section of the exam syllabus, ensuring comprehensive coverage of all topics.
+   - Sessions can be marked as complete or incomplete.
 
-6. **Marking Sessions**
-   - After completing a session, the student can mark it as complete.
-   - If a session is marked as incomplete, the app offers a rescheduled timetable that includes the incomplete session.
-   - If no available space exists, the app suggests a suitable time for the incomplete session.
+6. **Rescheduling Sessions**
+   - The student can drag and drop sessions to different times or days within the calendar.
+   - Upon dragging a session, the student can reschedule it to a new date and time.
 
 7. **Customization**
    - The student can edit the subject or length of a session directly within the calendar.
-   - Sessions can be dragged and dropped to different times or days, offering full flexibility.
+   - The design is responsive and user-friendly across all devices.
 
 8. **Confidence Ranking (Optional)**
    - The student has the option to rank their confidence in each subject on a scale from 1 to 3.
@@ -46,7 +47,8 @@ Upgrade is an app designed to help students create a personalized revision timet
 ### Teacher Journey
 
 1. **Account Creation**
-   - The teacher creates an account using their school email address and sets a password.
+   - The teacher creates an account using their school email address or signs in using Google, Facebook, or Apple.
+   - They see "Sign in with ZAPT" above the authentication options.
 
 2. **Viewing Student Progress**
    - The teacher can view the progress of each student in their class for a particular subject.
@@ -56,7 +58,7 @@ Upgrade is an app designed to help students create a personalized revision timet
 
 - **ZAPT Authentication**
   - Used for student and teacher authentication, providing secure account management.
-  
+
 - **Exam Syllabus API** (Placeholder)
   - Fetches the exam syllabus content to populate revision sessions with specific topics.
 
@@ -70,3 +72,5 @@ Upgrade is an app designed to help students create a personalized revision timet
 - The app is free to use.
 - The calendar supports drag-and-drop functionality for easy rescheduling.
 - The design is responsive and user-friendly across all devices.
+- All buttons have hover effects and are disabled during loading states to prevent multiple submissions.
+- The app uses '@neodrag/solid' for drag-and-drop functionality.

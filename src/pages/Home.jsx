@@ -1,8 +1,6 @@
-import { createSignal, onMount, For, Show } from 'solid-js';
+import { createSignal, onMount, Show } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
-import { supabase, createEvent } from '../supabaseClient';
-import dayjs from 'dayjs';
-import DragDropProvider from 'solid-draggable';
+import { supabase } from '../supabaseClient';
 import Calendar from '../components/Calendar';
 
 function Home(props) {
@@ -83,7 +81,7 @@ function Home(props) {
   };
 
   return (
-    <div class="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100 p-4">
+    <div class="min-h-screen h-full bg-gradient-to-br from-purple-100 to-blue-100 p-4">
       <div class="max-w-6xl mx-auto">
         <div class="flex justify-between items-center mb-8">
           <h1 class="text-4xl font-bold text-purple-600">Revision Timetable</h1>

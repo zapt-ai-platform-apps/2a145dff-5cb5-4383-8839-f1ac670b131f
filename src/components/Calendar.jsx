@@ -1,9 +1,10 @@
 import { createSignal, For } from 'solid-js';
 import dayjs from 'dayjs';
-import { Draggable } from 'solid-draggable';
+import { createDraggable } from '@neodrag/solid';
 
 function Calendar(props) {
   const [currentMonth, setCurrentMonth] = createSignal(dayjs());
+  const { draggable } = createDraggable();
 
   const daysInMonth = () => {
     const startDay = currentMonth().startOf('month').startOf('week');
@@ -31,7 +32,7 @@ function Calendar(props) {
   };
 
   return (
-    <div>
+    <div class="min-h-screen h-full">
       <div class="flex justify-between items-center mb-4">
         <button
           onClick={prevMonth}
@@ -63,14 +64,16 @@ function Calendar(props) {
               </div>
               <For each={sessionsForDay(day)}>
                 {(session) => (
-                  <Draggable
+                  <div
                     class="bg-white shadow-md rounded-lg p-1 mb-1 cursor-pointer"
-                    onEnd={(event) => {
-                      const newDate = prompt('Enter new date (YYYY-MM-DD):');
-                      const newTime = prompt('Enter new time (morning/afternoon):');
-                      if (newDate && newTime) {
-                        props.onRescheduleSession(session.id, newDate, newTime);
-                      }
+                    use:draggable={{
+                      onDragEnd: (data) => {
+                        const newDate = prompt('Enter new date (YYYY-MM-DD):');
+                        const newTime = prompt('Enter new time (morning/afternoon):');
+                        if (newDate && newTime) {
+                          props.onRescheduleSession(session.id, newDate, newTime);
+                        }
+                      },
                     }}
                   >
                     <div class="flex items-center justify-between">
@@ -89,7 +92,7 @@ function Calendar(props) {
                         class="cursor-pointer"
                       />
                     </div>
-                  </Draggable>
+                  </div>
                 )}
               </For>
             </div>

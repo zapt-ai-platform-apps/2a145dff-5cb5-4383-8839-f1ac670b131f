@@ -1,6 +1,5 @@
-import { createSignal, onMount, Show } from 'solid-js';
+import { createSignal, onMount, Show, For } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
-import { createEvent } from '../supabaseClient';
 
 function Setup(props) {
   const [examInfo, setExamInfo] = createSignal([]);
@@ -73,10 +72,10 @@ function Setup(props) {
   };
 
   return (
-    <div class="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100 p-4">
+    <div class="min-h-screen h-full bg-gradient-to-br from-purple-100 to-blue-100 p-4">
       <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-6">
         <h1 class="text-3xl font-bold mb-6 text-purple-600">Setup Your Revision Schedule</h1>
-        
+
         <h2 class="text-2xl font-semibold mb-4">Select Your Exams</h2>
         <Show when={!loading()} fallback={<p>Loading exams...</p>}>
           <For each={examInfo()}>
@@ -162,7 +161,7 @@ function Setup(props) {
 
         <button
           onClick={handleSubmit}
-          class="mt-6 px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+          class="mt-6 px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer disabled:opacity-50"
           disabled={loading()}
         >
           {loading() ? 'Saving...' : 'Generate Timetable'}
