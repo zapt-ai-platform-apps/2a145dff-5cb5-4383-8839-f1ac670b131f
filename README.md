@@ -79,14 +79,36 @@ Upgrade is an application designed to help students create a personalized revisi
   - Used for fetching the detailed syllabus for each exam subject.
   - Ensures that all relevant topics are covered in the generated timetable.
 
-## Required Environment Variables in Vercel
+## Common Issues and Solutions
 
-- Ensure that `VITE_PUBLIC_APP_ID` and `NEON_DB_URL` are set in the Vercel project's environment variables settings.
-- **Note**: Do not include `.env` files in production. Vercel manages environment variables securely.
+- **Build Errors**:
+  - If you encounter build errors related to environment variables or modules like `dotenv`, ensure that you have set up your environment variables correctly in your deployment platform (e.g., Vercel).
+  - Remove any unnecessary imports of `dotenv` in serverless functions, as environment variables are injected automatically in such environments.
 
-## Build and Deployment Notes
+## Environment Variable Setup
 
-- The app uses Vite for building the frontend and serverless functions for the backend API routes.
-- Ensure that the `vite.config.js` file is updated to support Vite version 4.
-- Removed deprecated options like `polyfillDynamicImport` from the Vite configuration.
-- Adjusted the Vite configuration to exclude server-only modules from the client-side bundle.
+Ensure that the following environment variables are set in your deployment environment:
+
+- `VITE_PUBLIC_APP_ID`: Obtain this from your ZAPT platform account.
+- `NEON_DB_URL`: Your Neon database connection URL.
+
+## Getting Started
+
+1. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
+2. **Run Development Server**:
+   ```bash
+   npm run dev
+   ```
+3. **Build for Production**:
+   ```bash
+   npm run build
+   ```
+
+## Deployment
+
+- The app is configured for deployment on **Vercel**.
+- Ensure all environment variables are set in the Vercel dashboard.
+- Vercel will handle the serverless functions in the `api` directory and the static frontend built by Vite.
