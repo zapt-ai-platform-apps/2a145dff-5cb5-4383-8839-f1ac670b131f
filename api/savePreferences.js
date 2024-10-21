@@ -1,3 +1,4 @@
+```javascript
 import { config } from 'dotenv';
 config();
 
@@ -29,7 +30,7 @@ export default async function handler(req, res) {
         delayStart: sessionPreferences.delayStart,
       })
       .onConflictDoUpdate({
-        target: preferences.userId,
+        target: [preferences.userId],
         set: {
           sessionLength: sessionPreferences.sessionLength,
           days: sessionPreferences.days,
@@ -114,3 +115,4 @@ export default async function handler(req, res) {
     res.status(500).json({ error: 'Error saving preferences' });
   }
 }
+```
