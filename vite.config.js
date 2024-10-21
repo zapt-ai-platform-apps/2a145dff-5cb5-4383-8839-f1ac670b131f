@@ -6,10 +6,7 @@ export default defineConfig({
   build: {
     target: 'esnext',
   },
-  resolve: {
-    conditions: ['development', 'browser'],
-  },
-  optimizeDeps: {
-    exclude: ['drizzle-orm', '@neondatabase/serverless'],
+  ssr: {
+    noExternal: ['@neondatabase/serverless', 'drizzle-orm'],
   },
 });
